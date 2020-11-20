@@ -3,7 +3,7 @@ set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_CRT_LINKAGE static)
 
 if(NOT PORT MATCHES "(boost|hwloc)")
-    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "E:/Repos/vcpkg/triplets/x64-windows-llvm.toolchain.cmake")
+    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/my-vcpkg-triplets/x64-windows-llvm.toolchain.cmake")
     if(DEFINED VCPKG_PLATFORM_TOOLSET)
         set(VCPKG_PLATFORM_TOOLSET llvm)
     endif()
