@@ -20,10 +20,10 @@ else()
     file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" PROG_ROOT)
 endif()
 file(TO_CMAKE_PATH "${PROG_ROOT}/LLVM" POSSIBLE_LLVM_ROOT)
-find_program(CLANG_CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS "${POSSIBLE_LLVM_ROOT}/bin")
+find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS "${POSSIBLE_LLVM_ROOT}/bin")
 
-if(NOT CLANG_CL_EXECUTBALE)
-  message(FATAL_ERRROR "clang-cl was not found!")
+if(NOT CLANG-CL_EXECUTBALE)
+  message(SEND_ERROR "clang-cl was not found!")
 endif()
 
 get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
