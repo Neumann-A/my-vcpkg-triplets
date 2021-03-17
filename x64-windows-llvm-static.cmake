@@ -7,7 +7,18 @@ if(NOT PORT MATCHES "(boost|hwloc|libpq|icu|harfbuzz)")
     if(DEFINED VCPKG_PLATFORM_TOOLSET)
         set(VCPKG_PLATFORM_TOOLSET llvm)
     endif()
+    if (DEFINED ENV{ProgramW6432})
+        file(TO_CMAKE_PATH "$ENV{ProgramW6432}" PROG_ROOT)
+    else()
+        file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" PROG_ROOT)
+    endif()
+    file(TO_CMAKE_PATH "${PROG_ROOT}/LLVM/bin" POSSIBLE_LLVM_BIN_DIR)
+    if(EXISTS "${POSSIBLE_LLVM_BIN_DIR}")
+        set(ENV{PATH} "$ENV{PATH};${POSSIBLE_LLVM_BIN_DIR}")
+    endif()
 endif()
+
+
 
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
