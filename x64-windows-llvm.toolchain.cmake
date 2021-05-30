@@ -35,6 +35,7 @@ set(CMAKE_AR "${LLVM_BIN_DIR}/llvm-lib.exe" CACHE STRING "" FORCE)
 set(CMAKE_LINKER "${LLVM_BIN_DIR}/lld-link.exe" CACHE STRING "" FORCE)
 set(CMAKE_ASM_MASM_COMPILER "ml64.exe" CACHE STRING "" FORCE)
 set(CMAKE_RC_COMPILER "rc.exe" CACHE STRING "" FORCE)
+set(CMAKE_MT "mt.exe" CACHE STRING "" FORCE)
 
 # Set runtime library.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<STREQUAL:${VCPKG_CRT_LINKAGE},dynamic>:DLL>" CACHE STRING "")

@@ -14,7 +14,7 @@ if(NOT PORT MATCHES "(boost|hwloc|libpq|icu|harfbuzz)")
     endif()
     file(TO_CMAKE_PATH "${PROG_ROOT}/LLVM/bin" POSSIBLE_LLVM_BIN_DIR)
     if(EXISTS "${POSSIBLE_LLVM_BIN_DIR}")
-        set(ENV{PATH} "$ENV{PATH};${POSSIBLE_LLVM_BIN_DIR}")
+        set(ENV{PATH} "${POSSIBLE_LLVM_BIN_DIR};$ENV{PATH}")
     endif()
 endif()
 
