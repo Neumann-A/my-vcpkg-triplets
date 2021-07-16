@@ -12,18 +12,12 @@ set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
 set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
 set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
 
-
 # Set compiler.
-if (DEFINED ENV{ProgramW6432})
-    file(TO_CMAKE_PATH "$ENV{ProgramW6432}" PROG_ROOT)
-else()
-    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" PROG_ROOT)
-endif()
-file(TO_CMAKE_PATH "${PROG_ROOT}/LLVM" POSSIBLE_LLVM_ROOT)
-find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS "${POSSIBLE_LLVM_ROOT}/bin")
+find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
+find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" )
 
 if(NOT CLANG-CL_EXECUTBALE)
-  message(SEND_ERROR "clang-cl was not found!")
+  message(SEND_ERROR "clang-cl was not found!") # Not a FATAL_ERROR due to being a toolchain!
 endif()
 
 get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
@@ -57,17 +51,16 @@ if(DEFINED VCPKG_SET_CHARSET_FLAG AND NOT VCPKG_SET_CHARSET_FLAG)
 endif()
 
 # Set compiler flags.
-set(CLANG_FLAGS "/clang:-fasm /clang:-fopenmp-simd /clang:-Wno-nullability-completeness")
+set(CLANG_FLAGS "/clang:-fasm /clang:-fopenmp-simd")
 # Disable logo for compiler and linker.
 set(CMAKE_CL_NOLOGO "/nologo" CACHE STRING "")
 
 set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} /DWIN32 /D_WINDOWS /FC ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG}" CACHE STRING "")
-set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} /clang:-flto=full /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_RELEASE "/O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} /clang:-flto=full ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_MINSIZEREL "/O1 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} /clang:-flto=full /DNDEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "/O2 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} /clang:-flto=full ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 
-# TODO: Remove /U__cpp_concepts once LLVM adds MS STL support.
 set(CMAKE_CXX_FLAGS "${CMAKE_CL_NOLOGO} /DWIN32 /D_WINDOWS /FC /permissive- ${VCPKG_CXX_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${VCPKG_CXX_FLAGS_RELEASE} /clang:-fwhole-program-vtables" CACHE STRING "")
