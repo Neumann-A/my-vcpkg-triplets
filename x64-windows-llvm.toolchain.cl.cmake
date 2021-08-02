@@ -15,7 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
 
 find_program(LLD-LINK_EXECUTBALE NAMES "lld-link" "lld-link.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" NO_DEFAULT_PATH)
 find_program(LLD-LINK_EXECUTBALE NAMES "lld-link" "lld-link.exe" PATHS ENV LLVMInstallDir PATH_SUFFIXES "bin" )
-get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
+get_filename_component(LLVM_BIN_DIR "${LLD-LINK_EXECUTBALE}" DIRECTORY)
 list(INSERT CMAKE_PROGRAM_PATH 0 "${LLVM_BIN_DIR}")
 
 # Set compiler.
