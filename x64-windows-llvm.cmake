@@ -1,7 +1,8 @@
 set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_CRT_LINKAGE dynamic)
-set(VCPKG_ENV_PASSTHROUGH "LLVMInstallDir;LLVMToolsVersion")
+set(VCPKG_ENV_PASSTHROUGH "LLVMToolsVersion")
+set(VCPKG_ENV_PASSTHROUGH_UNTRACKED "LLVMInstallDir")
 set(VCPKG_QT_TARGET_MKSPEC win32-clang-msvc) # For Qt5
 
 # Get Program Files root to lookup possible LLVM installation
