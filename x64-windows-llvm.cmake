@@ -1,8 +1,8 @@
 set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_CRT_LINKAGE dynamic)
-set(VCPKG_ENV_PASSTHROUGH "LLVMToolsVersion")
-set(VCPKG_ENV_PASSTHROUGH_UNTRACKED "LLVMInstallDir")
+# Untracked since vcpkg will track the compiler version.
+set(VCPKG_ENV_PASSTHROUGH_UNTRACKED "LLVMInstallDir;LLVMToolsVersion") 
 set(VCPKG_QT_TARGET_MKSPEC win32-clang-msvc) # For Qt5
 
 # Get Program Files root to lookup possible LLVM installation
@@ -17,7 +17,7 @@ else()
     file(TO_CMAKE_PATH "${PROG_ROOT}/LLVM/bin" POSSIBLE_LLVM_BIN_DIR)
 endif()
 
-if(NOT PORT MATCHES "(boost|hwloc|libpq|icu|harfbuzz|qt*|benchmark|gtest)")
+if(NOT PORT MATCHES "(boost|hwloc|libpq|icu|harfbuzz|qt*|benchmark|gtest|tomlplusplus)")
     set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/x64-windows-llvm.toolchain.cmake")
     if(DEFINED VCPKG_PLATFORM_TOOLSET)
         set(VCPKG_PLATFORM_TOOLSET ClangCL)
@@ -25,7 +25,7 @@ if(NOT PORT MATCHES "(boost|hwloc|libpq|icu|harfbuzz|qt*|benchmark|gtest)")
     if(EXISTS "${POSSIBLE_LLVM_BIN_DIR}")
         set(ENV{PATH} "${POSSIBLE_LLVM_BIN_DIR};$ENV{PATH}")
     endif()
-elseif(PORT MATCHES "(qt*)")
+elseif(PORT MATCHES "(qt*|tomlplusplus)")
     if(EXISTS "${POSSIBLE_LLVM_BIN_DIR}")
         set(ENV{PATH} "$ENV{PATH};${POSSIBLE_LLVM_BIN_DIR}")
     endif()
