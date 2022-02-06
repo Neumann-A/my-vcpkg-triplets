@@ -3,7 +3,7 @@ set(VCPKG_LIBRARY_LINKAGE static)
 set(VCPKG_CRT_LINKAGE dynamic)
 # Untracked since vcpkg will track the compiler version.
 set(VCPKG_ENV_PASSTHROUGH_UNTRACKED "LLVMInstallDir;LLVMToolsVersion") 
-set(VCPKG_QT_TARGET_MKSPEC win32-clang-msvc) # For Qt5
+set(VCPKG_QT_TARGET_MKSPEC win32-clang-msvc) # For qmake
 
 # Get Program Files root to lookup possible LLVM installation
 if (DEFINED ENV{ProgramW6432})
@@ -29,6 +29,7 @@ elseif(PORT MATCHES "(qt[a-z]+)")
     if(EXISTS "${POSSIBLE_LLVM_BIN_DIR}")
         set(ENV{PATH} "$ENV{PATH};${POSSIBLE_LLVM_BIN_DIR}")
     endif()
+    set(VCPKG_QT_TARGET_MKSPEC win32-msvc)
     set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/x64-windows-llvm.toolchain.cl.cmake")
 elseif(PORT MATCHES "(benchmark|gtest|pkgconf)")
     # Cannot have LTO enabled in gtest or benchmark since this eliminates/remove main from (gtest|benchmark)_main
@@ -40,6 +41,7 @@ elseif(PORT MATCHES "(benchmark|gtest|pkgconf)")
         set(ENV{PATH} "${POSSIBLE_LLVM_BIN_DIR};$ENV{PATH}")
     endif()
 else()
+    set(VCPKG_QT_TARGET_MKSPEC win32-msvc)
     # Normal cl case.
 endif()
 
