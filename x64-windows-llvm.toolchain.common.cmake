@@ -1,18 +1,24 @@
 include_guard(GLOBAL)
 
-include("${CMAKE_CURRENT_LIST_DIR}/${VCPKG_TARGET_TRIPLET}.cmake")
+function(get_vcpkg_triplet_variables)
+  include("${CMAKE_CURRENT_LIST_DIR}/${VCPKG_TARGET_TRIPLET}.cmake")
+  # Be carefull here you don't want to pull in all variables from the triplet!
+  # Port is not defined!
+  set(VCPKG_CRT_LINKAGE "${VCPKG_CRT_LINKAGE}" PARENT_SCOPE) # This is also forwarded by vcpkg itself
+endfunction()
 
+get_vcpkg_triplet_variables()
 # Set C standard.
 set(CMAKE_C_STANDARD 11 CACHE STRING "")
 set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
 set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
-set(std_c_flags "/std:c11 /Zc:__STDC__")
+set(std_c_flags "-std:c11 /Zc:__STDC__")
 
 # Set C++ standard.
 set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
 set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING "")
 set(CMAKE_CXX_EXTENSIONS OFF CACHE STRING "")
-set(std_cxx_flags "/permissive- /std:c++20 /Zc:__cplusplus")
+set(std_cxx_flags "/permissive- -std:c++20 /Zc:__cplusplus")
 
 # Set Windows definitions:
 set(windows_defs "/DWIN32 /D_WIN64 /D_WINDOWS /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00")
@@ -51,7 +57,7 @@ else()
 endif()
 
 # Setup try_compile correctly. 
-list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE 
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE 
                                                  VCPKG_C_FLAGS VCPKG_CXX_FLAGS
                                                  VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
                                                  VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
