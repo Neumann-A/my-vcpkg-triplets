@@ -38,6 +38,6 @@ if(PORT MATCHES "^itk$" AND "rtk" IN_LIST FEATURES)
     unset(VCPKG_VS_CMAKE_GENERATOR)
     set(ENV{PATH} "${LLVM_PATH_BACKUP}")
 endif()
-if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES)
+if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupported by llvm-lib
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_AR=lib.exe")
 endif()
