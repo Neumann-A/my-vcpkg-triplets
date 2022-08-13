@@ -12,13 +12,13 @@ else()
     file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" PROG_ROOT)
 endif()
 if (DEFINED ENV{LLVMInstallDir})
-    file(TO_CMAKE_PATH "${LLVMInstallDir}/bin" POSSIBLE_LLVM_BIN_DIR)
+    file(TO_CMAKE_PATH "$ENV{LLVMInstallDir}/bin" POSSIBLE_LLVM_BIN_DIR)
 else()
     file(TO_CMAKE_PATH "${PROG_ROOT}/LLVM/bin" POSSIBLE_LLVM_BIN_DIR)
 endif()
 
 # Per port customization
-include("${CMAKE_CURRENT_LIST_DIR}/x64-windows-llvm.port.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/x64-windows-llvm//x64-windows-llvm.port.cmake")
 
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)

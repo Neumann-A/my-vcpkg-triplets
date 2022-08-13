@@ -18,7 +18,7 @@ else()
 endif()
 
 # Per port customization
-include("${CMAKE_CURRENT_LIST_DIR}/x64-windows-llvm.port.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/x64-windows-llvm/x64-windows-llvm.port.cmake")
 
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)

@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function(get_vcpkg_triplet_variables)
-  include("${CMAKE_CURRENT_LIST_DIR}/${VCPKG_TARGET_TRIPLET}.cmake")
+  include("${CMAKE_CURRENT_LIST_DIR}/../${VCPKG_TARGET_TRIPLET}.cmake")
   # Be carefull here you don't want to pull in all variables from the triplet!
   # Port is not defined!
   set(VCPKG_CRT_LINKAGE "${VCPKG_CRT_LINKAGE}" PARENT_SCOPE) # This is also forwarded by vcpkg itself
