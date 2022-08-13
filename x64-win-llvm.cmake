@@ -18,5 +18,7 @@ set(VCPKG_VS_CMAKE_GENERATOR "Visual Studio 17 2022") # this requires changes to
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 
+## Extra scripts which should not directly be hashed so that changes don't nuke the complete installed tree in manifest mode
+## Note: This breaks binary caching so don't apply changes to these files unkowningly. 
 include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/extra_setup.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/port_specialization.cmake")
