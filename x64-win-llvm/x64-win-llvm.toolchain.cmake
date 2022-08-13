@@ -51,7 +51,7 @@ elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
 else()
   message(FATAL_ERROR "Invalid VCPKG_CRT_LINKAGE: \"${VCPKG_CRT_LINKAGE}\".")
 endif()
-set(VCPKG_DBG_FLAG "/Z7 /Brepro")
+set(VCPKG_DBG_FLAG "/Z7 /Brepro") # clang-cl only supports /Z7
  
 # Set charset flag.
 set(CHARSET_FLAG "/utf-8")
@@ -111,11 +111,11 @@ unset(flag_suf)
 
 # Set linker flags.
 foreach(linker IN ITEMS "SHARED_LINKER;MODULE_LINKER;EXE_LINKER")
-  set(CMAKE_${linker}_FLAGS_INIT "/Brepro ${VCPKG_LINKER_FLAGS}")
-  set(CMAKE_${linker}_FLAGS_DEBUG "/INCREMENTAL:NO /DEBUG:FULL ${VCPKG_LINKER_FLAGS_DEBUG}" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_RELEASE "/OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_MINSIZEREL "/OPT:REF /OPT:ICF" CACHE STRING "")
-  set(CMAKE_${linker}_FLAGS_RELWITHDEBINFO "/OPT:REF /OPT:ICF /DEBUG:FULL" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_INIT "${CMAKE_CL_NOLOGO} /INCREMENTAL:NO /Brepro ${VCPKG_LINKER_FLAGS}" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_DEBUG "/DEBUG:FULL ${VCPKG_LINKER_FLAGS_DEBUG}" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_RELEASE "/DEBUG /OPT:REF /OPT:ICF ${VCPKG_LINKER_FLAGS_RELEASE}" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_MINSIZEREL "/DEBUG /OPT:REF /OPT:ICF" CACHE STRING "")
+  set(CMAKE_${linker}_FLAGS_RELWITHDEBINFO "/DEBUG:FULL /OPT:REF /OPT:ICF" CACHE STRING "")
 endforeach()
 unset(linker)
 
@@ -125,7 +125,6 @@ set(CMAKE_ASM_MASM_FLAGS_INIT "${CMAKE_CL_NOLOGO}")
 # Set resource compiler flags.
 set(CMAKE_RC_FLAGS_INIT "-c65001 ${windows_defs}")
 set(CMAKE_RC_FLAGS_DEBUG_INIT "-D_DEBUG")
-
 
 # Setup try_compile correctly. Requires all variables required by the toolchain. 
 list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE 
@@ -161,4 +160,3 @@ unset(ignore_werror)
 unset(arch_flags)
 unset(VCPKG_DBG_FLAG)
 unset(VCPKG_CRT_FLAG)
-
