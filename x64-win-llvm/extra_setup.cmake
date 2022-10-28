@@ -7,8 +7,7 @@ if(DEFINED CURRENT_PORT_DIR AND
    DEFINED VCPKG_MANIFEST_INSTALL AND
    DEFINED CMD)
     # These means we are within vcpkg and not somewhere else.
-    include("${CMAKE_CURRENT_LIST_DIR}/scripts/vcpkg_configure_cmake.cmake") 
-    set(ENV{PATH} "${CMAKE_CURRENT_LIST_DIR}/wrappers;$ENV{PATH}")
+    # set(ENV{PATH} "${CMAKE_CURRENT_LIST_DIR}/wrappers;$ENV{PATH}")
 
     if (DEFINED ENV{ProgramW6432})
         file(TO_CMAKE_PATH "$ENV{ProgramW6432}" PROG_ROOT)

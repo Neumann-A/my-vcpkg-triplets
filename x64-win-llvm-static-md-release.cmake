@@ -13,7 +13,6 @@ if(DEFINED VCPKG_PLATFORM_TOOLSET)
 endif()
 set(VCPKG_ENV_PASSTHROUGH_UNTRACKED "LLVMInstallDir;LLVMToolsVersion") # For the ClangCL toolset
 set(VCPKG_QT_TARGET_MKSPEC win32-clang-msvc) # For Qt5
-set(VCPKG_VS_CMAKE_GENERATOR "Visual Studio 17 2022") # this requires changes to vcpkg_configure_cmake
 
 ## Policy settings
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
