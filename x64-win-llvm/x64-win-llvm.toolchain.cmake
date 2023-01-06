@@ -111,7 +111,8 @@ if(VCPKG_USE_SANITIZERS)
     else()
       set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
     endif()
-    set(sanitizer_path "/LIBPATH:\\\"${clang_ver_path}/lib/windows\\\"" )
+    set(ENV{LINK} "$ENV{LINK} /LIBPATH:\"${clang_ver_path}/lib/windows\"")
+    #set(sanitizer_path "/LIBPATH:\\\\\"${clang_ver_path}/lib/windows\\\\\"" )
     set(sanitizer_libs "clang_rt.ubsan_standalone-x86_64.lib clang_rt.ubsan_standalone_cxx-x86_64.lib")
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
       set(sanitizer_libs_exe "clang_rt.asan_dynamic-x86_64.lib clang_rt.asan_dynamic_runtime_thunk-x86_64.lib")
@@ -195,6 +196,8 @@ list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES VCPKG_CRT_LINKAGE
                                                  VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
                                                  VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
                                                  VCPKG_SET_CHARSET_FLAG
+                                                 VCPKG_USE_SANITIZERS
+                                                 VCPKG_USE_LTO
                                                  )
 macro(toolchain_set_cmake_policy_new)
 if(POLICY ${ARGN})
