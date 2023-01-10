@@ -14,15 +14,12 @@ env:
   VCPKG_NUGET_REPOSITORY: https://github.com/Neumann-A/my-vcpkg-packages.git
 jobs:
   job:
-    name: ${{ matrix.name }}-build-and-test
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         name: [x64-win-llvm-release win-llvm-san win-llvm-san-static win-llvm-lto win-llvm-lto-static win-llvm-lto-san win-llvm-lto-san-static win-llvm-lto-san-static-md]
-        os: windows-latest
-        cxx: clang-cl.exe
-        cc: clang-cl.exe
         mono: ''
         rmdir: 'Remove-Item -Recurse -Force -Path'
 
