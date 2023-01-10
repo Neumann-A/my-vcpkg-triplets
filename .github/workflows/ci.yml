@@ -16,15 +16,15 @@ jobs:
   job:
     name: ${{ matrix.name }}
     runs-on: windows-latest
-    mono: ''
-    rmdir: 'Remove-Item -Recurse -Force -Path'
-    triplet: ${{ matrix.name }}
-    host-triplet: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         name: [x64-win-llvm-release win-llvm-san win-llvm-san-static win-llvm-lto win-llvm-lto-static win-llvm-lto-san win-llvm-lto-san-static win-llvm-lto-san-static-md]
-
+        include: 
+          - mono: ''
+          - rmdir: 'Remove-Item -Recurse -Force -Path'
+          - triplet: ${{ matrix.name }}
+          - host-triplet: ${{ matrix.name }}
 
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.name }}
