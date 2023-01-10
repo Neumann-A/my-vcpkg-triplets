@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+        - '**.md'
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+
+env:
+  VCPKG_NUGET_REPOSITORY: https://github.com/Neumann-A/my-vcpkg-packages.git
+jobs:
+  job:
+    name: ${{ matrix.name }}-build-and-test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        name: [x64-win-llvm-release win-llvm-san win-llvm-san-static win-llvm-lto win-llvm-lto-static win-llvm-lto-san win-llvm-lto-san-static win-llvm-lto-san-static-md]
+        os: windows-latest
+        cxx: clang-cl.exe
+        cc: clang-cl.exe
+        mono: ''
+        rmdir: 'Remove-Item -Recurse -Force -Path'
+
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.name }}
+      VCPKG_HOST_TRIPLET: ${{ matrix.name }}
+      buildDir: '${{ github.workspace }}/b'
+      VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite;files,${{ github.workspace }}/vcpkg_cache'
+      VCPKG_DISABLE_METRICS: '1'
+      BASH_ENV: .github/workflows/bashrc
+
+    steps:
+      - name: Checkout Triplets
+        uses: actions/checkout@v3
+        with:
+          path: my-vcpkg-triplets
+
+      - name: Checkout vcpkg
+        uses: actions/checkout@v3
+        with:
+          repository: microsoft/vcpkg
+          path: vcpkg
+          ref: '5bb5f3923a33d862b25c18fd4514e08c74c698e1'
+
+      # Install latest CMake
+      - uses: lukka/get-cmake@v3.25.1
+
+      - name: Setup VS cmd
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Few PATH variables
+        shell: bash
+        run: |
+          echo GITHUB_WORKSPACE:${{ github.workspace }}
+          echo HOME: $HOME
+          echo buildDir: ${{ env.buildDir }}
+          echo GITHUB_ENV: $GITHUB_ENV
+
+      - name: Cache vcpkg downloads. 
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            ${{ github.workspace }}/vcpkg/downloads
+          key: ${{ matrix.name }}-vcpkg-downloads
+
+      - name: Cache vcpkg executable. 
+        id: cache-vcpkg-executable
+        uses: pat-s/always-upload-cache@v2.1.5
+        with:
+          path: |
+            ${{ github.workspace }}/vcpkg/vcpkg
+            ${{ github.workspace }}/vcpkg/vcpkg.exe
+          key: ${{ matrix.name }}-${{ hashFiles('vcpkg/scripts/bootstrap.*') }}
+
+      - name: Bootstrap vcpkg
+        run: > 
+          cmake 
+          -D VCPKG_ROOT=${{ github.workspace }}/vcpkg
+          -P ${{ github.workspace }}/.github/workflows/cmake/bootstrap-vcpkg.cmake
+
+      # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
+      - name: 'Setup NuGet Credentials'
+        shell: 'bash'
+        run: >
+          ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1`
+          sources add
+          -source "https://nuget.pkg.github.com/Neumann-A/index.json"
+          -storepasswordincleartext
+          -name "GitHub"
+          -username "Neumann-A"
+          -password "${{ secrets.CI_ACCESS_PAT }}"
+
+      - name: 'Test CMake build'
+        run: vcpkg install zlib
+
+      - name: 'Test Autotools build'
+        run: vcpkg install hwloc
+
+      - name: 'Test meson build'
+        run: vcpkg install fribidi
+
+      - name: collect vcpkg build logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}-vcpkg-buildtrees
+          path: |
+            ${{ github.workspace }}/vcpkg/buildtrees/**/*.log
+          retention-days: 2
+
+      - name: 'Cleanup vcpkg artifacts'
+        run: |
+          ${{ matrix.rmdir }} ${{ github.workspace }}/vcpkg/buildtrees
+          ${{ matrix.rmdir }} ${{ github.workspace }}/vcpkg/packages
