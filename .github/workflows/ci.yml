@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: [x64-win-llvm-release win-llvm-san win-llvm-san-static win-llvm-lto win-llvm-lto-static win-llvm-lto-san win-llvm-lto-san-static win-llvm-lto-san-static-md]
+        name: [x64-win-llvm-release, win-llvm-san, win-llvm-san-static, win-llvm-lto, win-llvm-lto-static, win-llvm-lto-san, win-llvm-lto-san-static, win-llvm-lto-san-static-md]
         include: 
           - mono: ''
           - rmdir: 'Remove-Item -Recurse -Force -Path'
@@ -27,6 +27,7 @@ jobs:
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.name }}
       VCPKG_HOST_TRIPLET: ${{ matrix.name }}
+      VCPKG_OVERLAY_TRIPLETS= buildDir: '${{ github.workspace }}/my-vcpkg-triplets'
       buildDir: '${{ github.workspace }}/b'
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite;files,${{ github.workspace }}/vcpkg_cache'
       VCPKG_DISABLE_METRICS: '1'
@@ -79,7 +80,7 @@ jobs:
         run: > 
           cmake 
           -D VCPKG_ROOT=${{ github.workspace }}/vcpkg
-          -P ${{ github.workspace }}/.github/workflows/cmake/bootstrap-vcpkg.cmake
+          -P ${{ github.workspace }}/my-vcpkg-triplets/.github/workflows/cmake/bootstrap-vcpkg.cmake
 
       # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
       - name: 'Setup NuGet Credentials'
