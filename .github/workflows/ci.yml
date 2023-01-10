@@ -26,9 +26,8 @@ jobs:
 
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.name }}
-      VCPKG_HOST_TRIPLET: ${{ matrix.name }}
-      VCPKG_OVERLAY_TRIPLETS= buildDir: '${{ github.workspace }}/my-vcpkg-triplets'
-      buildDir: '${{ github.workspace }}/b'
+      VCPKG_DEFAULT_HOST_TRIPLET: ${{ matrix.name }}
+      VCPKG_OVERLAY_TRIPLETS: ${{ github.workspace }}/my-vcpkg-triplets'
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite;files,${{ github.workspace }}/vcpkg_cache'
       VCPKG_DISABLE_METRICS: '1'
       BASH_ENV: .github/workflows/bashrc
