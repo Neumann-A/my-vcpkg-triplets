@@ -27,7 +27,7 @@ jobs:
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.name }}
       VCPKG_DEFAULT_HOST_TRIPLET: ${{ matrix.name }}
-      VCPKG_OVERLAY_TRIPLETS: ${{ github.workspace }}/my-vcpkg-triplets'
+      VCPKG_OVERLAY_TRIPLETS: ${{ github.workspace }}'
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite;files,${{ github.workspace }}/vcpkg_cache'
       VCPKG_DISABLE_METRICS: '1'
       BASH_ENV: .github/workflows/bashrc
@@ -35,8 +35,6 @@ jobs:
     steps:
       - name: Checkout Triplets
         uses: actions/checkout@v3
-        with:
-          path: my-vcpkg-triplets
 
       - name: Checkout vcpkg
         uses: actions/checkout@v3
@@ -94,7 +92,7 @@ jobs:
           -password "${{ secrets.CI_ACCESS_PAT }}"
 
       - name: 'Test CMake build'
-        run: vcpkg install zlib
+        run: vcpkg install zlib --debug
 
       - name: 'Test Autotools build'
         run: vcpkg install hwloc
