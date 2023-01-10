@@ -23,8 +23,6 @@ jobs:
         include: 
           - mono: ''
           - rmdir: 'Remove-Item -Recurse -Force -Path'
-          - triplet: ${{ matrix.name }}
-          - host-triplet: ${{ matrix.name }}
 
     env:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.name }}
