@@ -1,3 +1,4 @@
+[![CI](https://github.com/Neumann-A/my-vcpkg-triplets/actions/workflows/ci.yml/badge.svg)](https://github.com/Neumann-A/my-vcpkg-triplets/actions/workflows/ci.yml)
 # my-vcpkg-triplet
 Small collection of vcpkg triplets
 
