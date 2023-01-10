@@ -77,7 +77,7 @@ jobs:
         run: > 
           cmake 
           -D VCPKG_ROOT=${{ github.workspace }}/vcpkg
-          -P ${{ github.workspace }}/my-vcpkg-triplets/.github/workflows/cmake/bootstrap-vcpkg.cmake
+          -P ${{ github.workspace }}/.github/workflows/cmake/bootstrap-vcpkg.cmake
 
       # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
       - name: 'Setup NuGet Credentials'
