@@ -18,5 +18,9 @@ set(VCPKG_QT_TARGET_MKSPEC win32-clang-msvc) # For Qt5
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 
+set(VCPKG_CMAKE_CONFIGURE_OPTIONS 
+      "-DCMAKE_TRY_COMPILE_CONFIGURATION=Release"
+    )
+
 include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/extra_setup.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/x64-win-llvm/port_specialization.cmake")

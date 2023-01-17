@@ -17,6 +17,6 @@ set/append `<relative-or-absolute-path-to-checkout>` to `VCPKG_OVERLAY_TRIPLETS`
 `x64-win-llvm-lto`: `x64-win-llvm` with LTO enabled in release builds (LTO only works with release build flags)  
 `x64-win-llvm-san`: `x64-win-llvm` with Sanitizers enabled in release builds (Sanitizers only work for release builds due to LLVM not shipping the libs build against the debug CRT)  
 `x64-win-llvm-lto-san`: `x64-win-llvm` with LTO and sanitizers enableded (only for release)  
-`x64-win-llvm(-lto)?(-san)?-static(-md)?`: Same as the above triplets but with static library linkage (and dynamic CRT linkage if `-md`)  
+`x64-win-llvm(-lto)?(-san)?-static(-md)?`: Same as the above triplets but with static library linkage (and dynamic CRT linkage if `-md`); `-san` without `-md` is unsupported due to limitations of the meson build system.
 
-`<above-triplet>-rel(ease)?` : Release only variant of the triplet  
+`<above-triplet>-rel(ease)?` : Release only variant of the triplet

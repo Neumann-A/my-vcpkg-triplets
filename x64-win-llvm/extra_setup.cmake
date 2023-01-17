@@ -30,4 +30,41 @@ if(DEFINED CURRENT_PORT_DIR AND
     get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
     set(LLVM_PATH_BACKUP "$ENV{PATH}")
     set(ENV{PATH} "${LLVM_BIN_DIR};$ENV{PATH}")
+    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
+                    "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
+            )
+        file(READ "${CURRENT_PORT_DIR}/portfile.cmake" port_contents)
+        if(NOT port_contents MATCHES "vcpkg_configure_meson")
+            list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
+                        "-DVCPKG_USE_COMPILER_FOR_LINKAGE:BOOL=TRUE"
+                )
+        else()
+            message(STATUS "Found meson in portfile. Deactivate linkage via compiler")
+        endif()
+        if(NOT DEFINED ENV{LLVMToolsVersion})
+            file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*")
+        else()
+            set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
+        endif()
+        set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
+    endif()
+else()
+    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
+                    "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
+                    "-DVCPKG_USE_COMPILER_FOR_LINKAGE:BOOL=TRUE"
+            )
+    endif()
 endif()
+
+list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
+            "-DCMAKE_POLICY_DEFAULT_CMP0012=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0056=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0092=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0117=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0126=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0128=NEW"
+            "-DCMAKE_POLICY_DEFAULT_CMP0137=NEW"
+    )

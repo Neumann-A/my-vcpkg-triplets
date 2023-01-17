@@ -43,6 +43,6 @@ if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupp
     set(ENV{AR} "llvm-ar.exe")
 endif()
 
-if(CMAKE_PARENT_LIST_FILE MATCHES "-lto-" AND NOT PORT MATCHES "(benchmark|gtest|pkgconf|^qt[a-z]+)")
+if(CMAKE_PARENT_LIST_FILE MATCHES "-lto(\\\.|-)" AND NOT PORT MATCHES "(benchmark|gtest|pkgconf|^qt[a-z]+)")
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_USE_LTO:BOOL=TRUE")
 endif()
