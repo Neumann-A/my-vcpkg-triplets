@@ -93,13 +93,13 @@ jobs:
           -password "${{ secrets.CI_ACCESS_PAT }}"
 
       - name: 'Test CMake build'
-        run: vcpkg install zlib --debug
+        run: ${{ github.workspace }}/vcpkg/vcpkg.exe install zlib --debug
 
       - name: 'Test Autotools build'
-        run: vcpkg install hwloc
+        run: ${{ github.workspace }}/vcpkg/vcpkg.exe install hwloc
 
       - name: 'Test meson build'
-        run: vcpkg install fribidi
+        run: ${{ github.workspace }}/vcpkg/vcpkg.exe install fribidi
 
       - name: collect vcpkg build logs
         if: ${{ failure() }}
