@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: [x64-win-llvm-release, x64-win-llvm-san, x64-win-llvm-san-static, x64-win-llvm-lto, x64-win-llvm-lto-static, x64-win-llvm-lto-san, x64-win-llvm-lto-san-static, x64-win-llvm-lto-san-static-md]
+        name: [x64-win-llvm-release, x64-win-llvm-san, x64-win-llvm-san-static-md, x64-win-llvm-lto, x64-win-llvm-lto-static, x64-win-llvm-lto-san, x64-win-llvm-lto-san-static-md]
         include: 
           - mono: ''
           - rmdir: 'Remove-Item -Recurse -Force -Path'
