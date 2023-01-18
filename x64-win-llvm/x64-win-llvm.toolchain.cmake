@@ -1,5 +1,9 @@
 include_guard(GLOBAL)
 
+option(VCPKG_USE_COMPILER_FOR_LINKAGE "Invoke the compiler for linking instead of the linker" OFF)
+option(VCPKG_USE_LTO "Enable full LTO for release builds" OFF)
+option(VCPKG_USE_SANITIZERS "Enable sanitizers for release builds" OFF)
+
 if(VCPKG_USE_COMPILER_FOR_LINKAGE)
   set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_CURRENT_LIST_DIR}/Platform/Clang-CL-override.cmake")
   set(CMAKE_USER_MAKE_RULES_OVERRIDE_C "${CMAKE_CURRENT_LIST_DIR}/Platform/Clang-CL-C.cmake")
@@ -114,7 +118,7 @@ if(VCPKG_USE_SANITIZERS)
     else()
       string(APPEND sanitizers ",address") # lld-link: error: /alternatename: conflicts: __sanitizer_on_print=__sanitizer_on_print__def
     endif()
-    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} -fsanitize-stats")
+    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} -fsanitize-stats /Oy-")
     if(NOT DEFINED ENV{LLVMToolsVersion})
       file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*")
     else()
@@ -139,7 +143,7 @@ endif()
 
 set(CMAKE_C_FLAGS "${CMAKE_CL_NOLOGO} ${windows_defs} ${arch_flags} ${VCPKG_C_FLAGS} ${CLANG_FLAGS} ${CHARSET_FLAG} ${std_c_flags} ${ignore_werror}" CACHE STRING "")
 set(CMAKE_C_FLAGS_DEBUG "/Od /Ob0 /GS /RTC1 /FC ${VCPKG_C_FLAGS_DEBUG} ${VCPKG_CRT_FLAG}d ${VCPKG_DBG_FLAG} /D_DEBUG" CACHE STRING "")
-set(CMAKE_C_FLAGS_RELEASE "${CLANG_FLAGS_RELEASE} /O2 /Oi /Ob2 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
+set(CMAKE_C_FLAGS_RELEASE "${CLANG_FLAGS_RELEASE} /O2 /Oi ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_MINSIZEREL "${CLANG_FLAGS_RELEASE} /O1 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} /DNDEBUG" CACHE STRING "")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CLANG_FLAGS_RELEASE} /O2 /Oi /Ob1 /GS- ${VCPKG_C_FLAGS_RELEASE} ${VCPKG_CRT_FLAG} ${CLANG_C_LTO_FLAGS} ${VCPKG_DBG_FLAG} /DNDEBUG" CACHE STRING "")
 
