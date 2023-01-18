@@ -59,7 +59,7 @@ jobs:
           ls
 
       - name: Cache vcpkg downloads. 
-        uses: pat-s/always-upload-cache@v2.1.5
+        uses: pat-s/always-upload-cache@v3
         with:
           path: |
             ${{ github.workspace }}/vcpkg/downloads
@@ -67,7 +67,7 @@ jobs:
 
       - name: Cache vcpkg executable. 
         id: cache-vcpkg-executable
-        uses: pat-s/always-upload-cache@v2.1.5
+        uses: pat-s/always-upload-cache@v3
         with:
           path: |
             ${{ github.workspace }}/vcpkg/vcpkg
@@ -92,6 +92,14 @@ jobs:
           -username "Neumann-A"
           -password "${{ secrets.CI_ACCESS_PAT }}"
 
+      - name: 'Setup NuGet APIKey'
+        shell: 'bash'
+        run: >
+          ${{ matrix.mono }} `./vcpkg/vcpkg fetch nuget | tail -n 1`
+          setapikey 
+          ${{ secrets.CI_ACCESS_PAT }}
+          -Source "https://nuget.pkg.github.com/Neumann-A/index.json"
+
       - name: 'Test CMake build'
         run: ${{ github.workspace }}/vcpkg/vcpkg.exe install zlib --debug
 
@@ -103,7 +111,7 @@ jobs:
 
       - name: collect vcpkg build logs
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.name }}-vcpkg-buildtrees
           path: |
