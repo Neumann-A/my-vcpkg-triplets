@@ -118,7 +118,7 @@ if(VCPKG_USE_SANITIZERS)
     else()
       string(APPEND sanitizers ",address") # lld-link: error: /alternatename: conflicts: __sanitizer_on_print=__sanitizer_on_print__def
     endif()
-    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} -fsanitize-stats /Oy-")
+    string(APPEND CLANG_FLAGS_RELEASE "-fsanitize=${sanitizers} -fsanitize-stats /Oy- /GF-")
     if(NOT DEFINED ENV{LLVMToolsVersion})
       file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*")
     else()
