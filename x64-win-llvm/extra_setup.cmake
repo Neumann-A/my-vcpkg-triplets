@@ -24,8 +24,12 @@ if(DEFINED CURRENT_PORT_DIR AND
                                                                            ENV LLVMInstallDir
                                                                      PATH_SUFFIXES "bin"
                                                                      NO_DEFAULT_PATH)
+    if(NOT DEFINED $ENV{LLVMInstallDir} AND NOT DEFINED $ENV{LLVMToolsVersion})
+        # Search for clang-cl using cmake default search paths. This should find VS installed clang-cl if it is installed 
+        find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe")
+    endif()
     if(NOT CLANG-CL_EXECUTBALE)
-        message(FATAL_ERROR "Unable to find LLVM installation. Please define environment variable LLVMInstallDir and LLVMToolsVersion")
+        message(FATAL_ERROR "Unable to find LLVM installation. Please define environment variable 'LLVMInstallDir' and 'LLVMToolsVersion'")
     endif()
     get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
     set(LLVM_PATH_BACKUP "$ENV{PATH}")
@@ -43,7 +47,7 @@ if(DEFINED CURRENT_PORT_DIR AND
             message(STATUS "Found meson in portfile. Deactivate linkage via compiler")
         endif()
         if(NOT DEFINED ENV{LLVMToolsVersion})
-            file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*")
+            file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*") # This should only contain a single folder
         else()
             set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
         endif()
