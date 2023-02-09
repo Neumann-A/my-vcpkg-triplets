@@ -24,7 +24,7 @@ if(DEFINED CURRENT_PORT_DIR AND
                                                                            ENV LLVMInstallDir
                                                                      PATH_SUFFIXES "bin"
                                                                      NO_DEFAULT_PATH)
-    if(NOT DEFINED $ENV{LLVMInstallDir} AND NOT DEFINED $ENV{LLVMToolsVersion})
+    if(NOT DEFINED ENV{LLVMInstallDir} AND NOT DEFINED ENV{LLVMToolsVersion})
         # Search for clang-cl using cmake default search paths. This should find VS installed clang-cl if it is installed 
         find_program(CLANG-CL_EXECUTBALE NAMES "clang-cl" "clang-cl.exe")
     endif()
