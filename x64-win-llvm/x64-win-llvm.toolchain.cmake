@@ -32,7 +32,10 @@ set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
 #set(std_cxx_flags "/permissive- -std:c++14 /Zc:__cplusplus")
 
 # Set Windows definitions:
-set(windows_defs "/DWIN32 /D_WIN64")
+set(windows_defs "/DWIN32")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+  string(APPEND windows_defs " /D_WIN64")
+endif()
 string(APPEND windows_defs " /D_WIN32_WINNT=0x0A00 /DWINVER=0x0A00") # tweak for targeted windows
 string(APPEND windows_defs " /D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE")
 string(APPEND windows_defs " /D_ATL_SECURE_NO_DEPRECATE /D_SCL_SECURE_NO_WARNINGS")
@@ -48,7 +51,9 @@ set(arch_flags "-mcrc32 -msse4.2")
 # -mcrc32 for libpq
 # -mrtm for tbb (will break qtdeclarative since it cannot run the executables in CI)
 # -msse4.2 for everything which normally cl can use. (Otherwise strict sse2 only.)
-
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+  string(APPEND arch_flags " -m32 --target=i686-pc-windows-msvc")
+endif()
 # /Za unknown
 
 # Set runtime library.
