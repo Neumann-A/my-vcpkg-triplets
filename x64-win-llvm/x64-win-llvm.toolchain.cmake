@@ -22,7 +22,9 @@ get_vcpkg_triplet_variables()
 set(CMAKE_C_STANDARD 11 CACHE STRING "")
 set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
 set(CMAKE_C_EXTENSIONS ON CACHE STRING "")
-set(std_c_flags "-std:c11 -D__STDC__=1") #/Zc:__STDC__
+set(std_c_flags "-std:c11 -D__STDC__=1 -Wno-implicit-function-declaration") #/Zc:__STDC__
+# -Wno-implicit-function-declaration because a lot of libraries don't #include <io.h> 
+# for read/open/access and clang 16 made that an error instead of a warning.
 
 # Set C++ standard.
 #set(CMAKE_CXX_STANDARD 14 CACHE STRING "")
