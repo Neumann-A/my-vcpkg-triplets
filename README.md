@@ -20,3 +20,9 @@ set/append `<relative-or-absolute-path-to-checkout>` to `VCPKG_OVERLAY_TRIPLETS`
 `x64-win-llvm(-lto)?(-san)?-static(-md)?`: Same as the above triplets but with static library linkage (and dynamic CRT linkage if `-md`); `-san` without `-md` is unsupported due to limitations of the meson build system.
 
 `<above-triplet>-rel(ease)?` : Release only variant of the triplet
+
+## Important Note:
+Currently the intriscs headers of clang are not unconditionally including the sub intrinsics like e.g. the avx intrinsics.
+This is different from MSVC where all intrinsic function the compiler supports are available.
+Changing the clang behavior requires editing the intrinsic headers located at `<llvm-root>/lib/clang/<llvm-version>/include` to unconditionally include the other intrinsics.
+See https://github.com/llvm/llvm-project/issues/53520 for more infos. This code change to the headers is required to e.g. compile qt with clang-cl.
