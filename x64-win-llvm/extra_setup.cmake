@@ -39,18 +39,19 @@ if(DEFINED CURRENT_PORT_DIR AND
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
             )
         file(READ "${CURRENT_PORT_DIR}/portfile.cmake" port_contents)
-        if(NOT port_contents MATCHES "vcpkg_configure_meson")
+        if(NOT PORT MATCHES "(openssl|boost)" AND NOT port_contents MATCHES "(vcpkg_configure_meson|_msbuild|_nmake)")
             list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                         "-DVCPKG_USE_COMPILER_FOR_LINKAGE:BOOL=TRUE"
                 )
         else()
-            message(STATUS "Found meson in portfile. Deactivate linkage via compiler")
+            message(STATUS "Found unsupported portfile. Deactivating linkage via compiler")
         endif()
         if(NOT DEFINED ENV{LLVMToolsVersion})
             file(GLOB clang_ver_path LIST_DIRECTORIES true "${LLVM_BIN_DIR}/../lib/clang/*") # This should only contain a single folder
         else()
             set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
         endif()
+        cmake_path(NORMAL_PATH clang_ver_path)
         set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
     endif()
 else()
