@@ -5,6 +5,7 @@ endif()
 if(PORT MATCHES "^(re2)$")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
+
 # Note: All gn ports still use cl unless we figure out to pass it a toolchain somehow. 
 if(PORT MATCHES "^(arrow|akali|arb|cello|chakracore|flint|folly|glog|zydis|graphicsmagick|freerdp|gtk|irrlicht|libde265|llfio|mongo-c-driver|tcl|nvtt)$")
     # akali -> typedef private void (T::*POnTimer)(void); -> error

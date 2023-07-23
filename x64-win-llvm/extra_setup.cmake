@@ -34,12 +34,12 @@ if(DEFINED CURRENT_PORT_DIR AND
     get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
     set(LLVM_PATH_BACKUP "$ENV{PATH}")
     set(ENV{PATH} "${LLVM_BIN_DIR};$ENV{PATH}")
-    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
+    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)" AND NOT PORT MATCHES "(icu)") # icu is building and executable calling the linker with hardcoded linker flags -> so no sanitizer
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
             )
         file(READ "${CURRENT_PORT_DIR}/portfile.cmake" port_contents)
-        if(NOT PORT MATCHES "(openssl|boost)" AND NOT port_contents MATCHES "(vcpkg_configure_meson|_msbuild|_nmake)")
+        if(NOT PORT MATCHES "(openssl|boost|libpq)" AND NOT port_contents MATCHES "(vcpkg_configure_meson|_msbuild|_nmake)")
             list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                         "-DVCPKG_USE_COMPILER_FOR_LINKAGE:BOOL=TRUE"
                 )
@@ -52,9 +52,12 @@ if(DEFINED CURRENT_PORT_DIR AND
             set(clang_ver_path "${LLVM_BIN_DIR}/../lib/clang/$ENV{LLVMToolsVersion}")
         endif()
         cmake_path(NORMAL_PATH clang_ver_path)
-        set(ENV{PATH} "$ENV{PATH};${clang_ver_path}/lib/windows")
+        set(ENV{PATH} "${clang_ver_path}/lib/windows;$ENV{PATH}")
+        set(ENV{LINK} "/LIBPATH:\"${clang_ver_path}/lib/windows\"")
+        #set(ENV{PATH} "$ENV{VCToolsInstallDir}/bin/Hostx64/${VCPKG_TARGET_ARCHITECTURE};$ENV{PATH}") # Probably need to remove the VS sanitizer libs so they won't get picked up by accident!
     endif()
 else()
+    # This is just the detect compiler run!
     if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
