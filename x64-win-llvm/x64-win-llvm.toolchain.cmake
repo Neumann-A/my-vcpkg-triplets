@@ -18,6 +18,9 @@ function(get_vcpkg_triplet_variables)
 endfunction()
 
 get_vcpkg_triplet_variables()
+
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "Embedded")
+
 # Set C standard.
 set(CMAKE_C_STANDARD 11 CACHE STRING "")
 set(CMAKE_C_STANDARD_REQUIRED ON CACHE STRING "")
