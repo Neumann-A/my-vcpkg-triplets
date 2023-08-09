@@ -2,7 +2,7 @@
 message(STATUS "Checking for vcpkg.....")
 find_program(VCPKG_EXECUTABLE NAMES vcpkg PATHS "vcpkg" "VCPKG_ROOT" ENV VCPKG_ROOT NO_DEFAULT_PATH)
 
-if(NOT VCPKG_EXECUTABLE)
+if(NOT VCPKG_EXECUTABLE OR NOT EXISTS "${VCPKG_EXECUTABLE}")
     if(CMAKE_HOST_WIN32)
         set(VCPKG_BOOTSTRAP_SCRIPT bootstrap-vcpkg.bat)
     else()
