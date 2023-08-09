@@ -78,6 +78,7 @@ jobs:
         run: > 
           cmake 
           -D VCPKG_ROOT=${{ github.workspace }}/vcpkg
+          -D VCPKG_EXECUTABLE=${{ github.workspace }}/vcpkg/vcpkg.exe
           -P ${{ github.workspace }}/.github/workflows/cmake/bootstrap-vcpkg.cmake
 
       # This step assumes `vcpkg` has been bootstrapped (run `./vcpkg/bootstrap-vcpkg`)
