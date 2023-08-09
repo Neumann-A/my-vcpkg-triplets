@@ -41,7 +41,7 @@ jobs:
         with:
           repository: microsoft/vcpkg
           path: vcpkg
-          ref: 'e51afe4695ebf5e6c6f523dbd3bb518db1970531'
+          ref: 'c9fa965c2a1b1334469b4539063f3ce95383653c'
 
       # Install latest CMake
       - uses: lukka/get-cmake@v3.25.1
