@@ -34,7 +34,7 @@ if(DEFINED CURRENT_PORT_DIR AND
     get_filename_component(LLVM_BIN_DIR "${CLANG-CL_EXECUTBALE}" DIRECTORY)
     set(LLVM_PATH_BACKUP "$ENV{PATH}")
     set(ENV{PATH} "${LLVM_BIN_DIR};$ENV{PATH}")
-    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)" AND NOT PORT MATCHES "(icu)") # icu is building and executable calling the linker with hardcoded linker flags -> so no sanitizer
+    if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
             )
@@ -56,10 +56,40 @@ if(DEFINED CURRENT_PORT_DIR AND
         set(ENV{LINK} "/LIBPATH:\"${clang_ver_path}/lib/windows\"")
         #set(ENV{PATH} "$ENV{VCToolsInstallDir}/bin/Hostx64/${VCPKG_TARGET_ARCHITECTURE};$ENV{PATH}") # Probably need to remove the VS sanitizer libs so they won't get picked up by accident!
     endif()
+    
+    ### Setup to make CUDA work with custom LLVM
+    # if(NOT LLVM_BIN_DIR MATCHES "/VC/")
+    # # NVCC tries to look for vcvarsall.bat within a parent folder of the compiler within VC/Auxiliary/Build
+    # # So the compiler needs to be within the folder /VC/, so we need to do a little folder dance to achieve that
+    # # Additionally the compiler needs to be the first to be found on PATH
+      # file(MAKE_DIRECTORY "${DOWNLOADS}/llvm-toolchain/VC/Auxiliary/Build")
+      # file(WRITE "${DOWNLOADS}/llvm-toolchain/VC/Auxiliary/Build/vcvarsall.bat" "")
+      # cmake_path(GET CLANG-CL_EXECUTBALE FILENAME cxx_compiler_filename)
+      # set(cuda_cxx_compiler_path "${DOWNLOADS}/llvm-toolchain/VC/bin")
+      # set(CUDA_C_COMPILER "${cuda_cxx_compiler_path}/${cxx_compiler_filename}")
+      
+      # if(NOT EXISTS "${cuda_cxx_compiler_path}")
+        # cmake_path(NATIVE_PATH cuda_cxx_compiler_path  cuda_cxx_compiler_path_native)
+        # cmake_path(NATIVE_PATH LLVM_BIN_DIR  llvm_bin_dir_native)
+        # execute_process(COMMAND cmd /d /c mklink /J "${cuda_cxx_compiler_path_native}" "${llvm_bin_dir_native}" COMMAND_ECHO STDOUT RESULT_VARIABLE var)
+        # message(STATUS "var:${var}")
+      # endif()
+      
+      # set(ENV{PATH} "${cuda_cxx_compiler_path};$ENV{PATH}")
+      # list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
+                  # "-DCUDA_C_COMPILER=${CUDA_C_COMPILER}"
+          # )
+      # unset(cxx_compiler_filename)
+      # unset(cuda_cxx_compiler_path)
+      # unset(CUDA_C_COMPILER)
+    # endif()
+    
+    # Due to nvcc error   : 'cudafe++' died with status 0xC0000409  clang-cl cannot currently be used to compile cu files.
+
 else()
     # This is just the detect compiler run!
     if(CMAKE_PARENT_LIST_FILE MATCHES "-san(\\\.|-)")
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS 
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
                     "-DVCPKG_USE_SANITIZERS:BOOL=TRUE"
                     "-DVCPKG_USE_COMPILER_FOR_LINKAGE:BOOL=TRUE"
             )

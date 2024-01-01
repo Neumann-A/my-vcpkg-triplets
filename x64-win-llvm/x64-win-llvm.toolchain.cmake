@@ -105,6 +105,22 @@ set(CMAKE_ASM_MASM_COMPILER "ml64.exe" CACHE STRING "")
 set(CMAKE_RC_COMPILER "rc.exe" CACHE STRING "")
 set(CMAKE_MT "mt.exe" CACHE STRING "")
 
+
+### CUDA section nvcc
+
+if(NOT CUDA_C_COMPILER)
+  # Due to nvcc error   : 'cudafe++' died with status 0xC0000409 |  clang-cl cannot currently be used to compile cu files.
+  # The CUDA frontend probably has problems parsing preprocessed files from clang-cl
+  find_program(CL_COMPILER NAMES cl)
+  set(CUDA_C_COMPILER "${CL_COMPILER}")
+endif()
+
+string(APPEND CMAKE_CUDA_FLAGS " --keep --use-local-env --allow-unsupported-compiler -ccbin \"${CUDA_C_COMPILER}\"")
+
+### CUDA section clang (requires cmake changes)
+
+###
+
 # Set compiler flags.
 #set(CLANG_FLAGS "/clang:-fasm -fmacro-backtrace-limit=0") #/clang:-fopenmp-simd -openmp
 

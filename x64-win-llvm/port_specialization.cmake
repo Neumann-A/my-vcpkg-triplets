@@ -31,14 +31,7 @@ if(PORT MATCHES "^(arrow|akali|arb|cello|chakracore|flint|folly|glog|zydis|graph
     unset(VCPKG_VS_CMAKE_GENERATOR)
     set(ENV{PATH} "${LLVM_PATH_BACKUP}")
 endif()
-if(PORT MATCHES "^itk$" AND "rtk" IN_LIST FEATURES)
-    # itk/rtk needs an update to correctly support cuda with clang-cl
-    message(STATUS "Falling back to cl!")
-    unset(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-    unset(VCPKG_PLATFORM_TOOLSET)
-    unset(VCPKG_VS_CMAKE_GENERATOR)
-    set(ENV{PATH} "${LLVM_PATH_BACKUP}")
-endif()
+
 if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupported by llvm-lib
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_AR=llvm-ar.exe")
     set(ENV{AR} "llvm-ar.exe")
