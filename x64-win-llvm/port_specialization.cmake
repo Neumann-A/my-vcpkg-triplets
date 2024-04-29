@@ -32,7 +32,7 @@ if(PORT MATCHES "^(arrow|akali|arb|cello|chakracore|flint|folly|glog|zydis|graph
     set(ENV{PATH} "${LLVM_PATH_BACKUP}")
 endif()
 
-if(PORT MATCHES "^gettext$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupported by llvm-lib
+if(PORT MATCHES "^gettext(-libintl)?$" AND "tools" IN_LIST FEATURES) # uses /EXTRACT unsupported by llvm-lib
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DCMAKE_AR=llvm-ar.exe")
     set(ENV{AR} "llvm-ar.exe")
 endif()
